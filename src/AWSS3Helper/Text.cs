@@ -53,5 +53,7 @@ namespace AWSS3Helper
 
             return $"Temp path: {tempPath}";
         }
+
+        internal static string FilePath { get; } = @"C:\temp\test.json";
     }
 }

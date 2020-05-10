@@ -9,6 +9,8 @@ namespace AWSS3Helper.Test
 
         internal static IS3Helper S3Helper { get; } = new S3Helper(logger: Logger);
 
+        internal static IS3Helper S3Helper_Mock { get; } = new S3Helper_Mock();
+
         internal static string BucketName { get; } = nameof(BucketName);
 
         internal static string S3Prefix { get; } = nameof(S3Prefix);

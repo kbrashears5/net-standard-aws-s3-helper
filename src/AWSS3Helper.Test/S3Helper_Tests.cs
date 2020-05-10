@@ -1,6 +1,7 @@
 using Logger;
 using NetStandardTestHelper.Xunit;
 using System;
+using System.Net;
 using Xunit;
 
 namespace AWSS3Helper.Test
@@ -87,7 +88,13 @@ namespace AWSS3Helper.Test
         [Fact]
         public async void CompleteMultipartUploadAsync()
         {
-            // TODO
+            var result = await TestValues.S3Helper_Mock.CompleteMultipartUploadAsync(bucketName: TestValues.BucketName,
+                s3Prefix: TestValues.S3Prefix,
+                uploadId: TestValues.UploadId);
+
+            Assert.NotNull(result);
+            Assert.Equal(HttpStatusCode.OK,
+                result.HttpStatusCode);
         }
 
         #endregion CompleteMultipartUploadAsync
@@ -112,7 +119,9 @@ namespace AWSS3Helper.Test
         [Fact]
         public void CreateTempFile()
         {
-            // TODO
+            var result = TestValues.S3Helper_Mock.CreateTempFile(contents: TestValues.Contents);
+
+            Assert.NotNull(result);
         }
 
         #endregion CreateTempFile
@@ -151,7 +160,12 @@ namespace AWSS3Helper.Test
         [Fact]
         public async void DeleteObjectAsync()
         {
-            // TODO
+            var result = await TestValues.S3Helper_Mock.DeleteObjectAsync(bucketName: TestValues.BucketName,
+                s3Prefix: TestValues.S3Prefix);
+
+            Assert.NotNull(result);
+            Assert.Equal(HttpStatusCode.OK,
+                result.HttpStatusCode);
         }
 
         #endregion DeleteObjectAsync
@@ -190,7 +204,12 @@ namespace AWSS3Helper.Test
         [Fact]
         public async void GetObjectAsync()
         {
-            // TODO
+            var result = await TestValues.S3Helper_Mock.GetObjectAsync(bucketName: TestValues.BucketName,
+                s3Prefix: TestValues.S3Prefix);
+
+            Assert.NotNull(result);
+            Assert.Equal(HttpStatusCode.OK,
+                result.HttpStatusCode);
         }
 
         #endregion GetObjectAsync
@@ -229,7 +248,10 @@ namespace AWSS3Helper.Test
         [Fact]
         public async void StartMultipartUploadAsync()
         {
-            // TODO
+            var result = await TestValues.S3Helper_Mock.StartMultipartUploadAsync(bucketName: TestValues.BucketName,
+                s3Prefix: TestValues.S3Prefix);
+
+            Assert.NotNull(result);
         }
 
         #endregion StartMultipartUploadAsync
@@ -284,7 +306,9 @@ namespace AWSS3Helper.Test
         [Fact]
         public async void UploadFileAsync()
         {
-            // TODO
+            await TestValues.S3Helper_Mock.UploadFileAsync(bucketName: TestValues.BucketName,
+               s3Prefix: TestValues.S3Prefix,
+               contents: TestValues.Contents);
         }
 
         #endregion UploadFileAsync
@@ -393,7 +417,15 @@ namespace AWSS3Helper.Test
         [Fact]
         public async void UploadFilePartAsync()
         {
-            // TODO
+            var result = await TestValues.S3Helper_Mock.UploadFilePartAsync(bucketName: TestValues.BucketName,
+                s3Prefix: TestValues.S3Prefix,
+                uploadId: TestValues.UploadId,
+                uploadPart: TestValues.UploadPart,
+                contents: TestValues.Contents);
+
+            Assert.NotNull(result);
+            Assert.Equal(HttpStatusCode.OK,
+                result.HttpStatusCode);
         }
 
         #endregion UploadFilePartAsync
