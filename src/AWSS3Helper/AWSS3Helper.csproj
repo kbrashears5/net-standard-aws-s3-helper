@@ -2,6 +2,12 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>Kevin Brashears</Authors>
+    <Company>kbrashears5</Company>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/kbrashears5/net-standard-aws-s3-helper</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/kbrashears5/net-standard-aws-s3-helper</RepositoryUrl>
+    <Description>Collection of helper functions for interacting with the AWS S3 service</Description>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
