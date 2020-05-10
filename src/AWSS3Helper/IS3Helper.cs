@@ -1,6 +1,5 @@
 ﻿using Amazon.S3;
 using Amazon.S3.Model;
-using Logger;
 using System;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,16 +11,6 @@ namespace AWSS3Helper
     /// </summary>
     public interface IS3Helper
     {
-        /// <summary>
-        /// Logger
-        /// </summary>
-        ILogger Logger { get; }
-
-        /// <summary>
-        /// Amazon AWS S3 Client
-        /// </summary>
-        AmazonS3Client Client { get; }
-
         /// <summary>
         /// Marks the multipart upload as complete
         /// </summary>

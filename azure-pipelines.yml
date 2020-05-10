@@ -1,0 +1,25 @@
+# define pipeline number (https://docs.microsoft.com/en-us/azure/devops/pipelines/build/options?view=azure-devops&tabs=yaml#build-number-format)
+name: 0.0$(Rev:.r)
+
+# define variables (https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=example#variables)
+variables:
+  AccountName: '_kbrashears5'
+  RepoName: 'net-standard-aws-s3-helper'
+  ArtifactName: 'Build'
+  BuildName: '$(AccountName).$(RepoName)'
+
+# define build triggers (https://docs.microsoft.com/en-us/azure/devops/pipelines/yaml-schema?view=azure-devops&tabs=example#trigger)
+trigger:
+  branches:
+    include:
+    - master
+  paths:
+    include:
+    - src/*
+
+# build % release
+stages:
+- template: build.yml
+  parameters:
+    ArtifactName: $(ArtifactName)
+    SolutionName: '*.sln'

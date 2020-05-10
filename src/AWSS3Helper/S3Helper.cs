@@ -20,12 +20,12 @@ namespace AWSS3Helper
         /// <summary>
         /// Logger
         /// </summary>
-        public ILogger Logger { get; }
+        private ILogger Logger { get; }
 
         /// <summary>
         /// Client to interact with AWS S3
         /// </summary>
-        public AmazonS3Client Client { get; }
+        private AmazonS3Client Client { get; }
 
         /// <summary>
         /// Disposed
@@ -273,6 +273,7 @@ namespace AWSS3Helper
             if (string.IsNullOrWhiteSpace(s3Prefix)) throw new ArgumentNullException(nameof(s3Prefix));
             if (string.IsNullOrWhiteSpace(uploadId)) throw new ArgumentNullException(nameof(uploadId));
             if (uploadPart == 0) throw new ArgumentException(nameof(uploadPart));
+            if (string.IsNullOrWhiteSpace(contents)) throw new ArgumentNullException(nameof(contents));
 
             var tooSmall = Encoding.Unicode.GetByteCount(contents) < Text.MinimumPartSize;
             var tooLarge = Encoding.Unicode.GetBytes(contents).LongCount() > Text.MaximumPartSize;
