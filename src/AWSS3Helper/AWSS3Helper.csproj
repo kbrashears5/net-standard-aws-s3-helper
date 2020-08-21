@@ -8,6 +8,9 @@
     <PackageProjectUrl>https://github.com/kbrashears5/net-standard-aws-s3-helper</PackageProjectUrl>
     <RepositoryUrl>https://github.com/kbrashears5/net-standard-aws-s3-helper</RepositoryUrl>
     <Description>Collection of helper functions for interacting with the AWS S3 service</Description>
+    <RepositoryType>github</RepositoryType>
+    <PackageId>NetStandardAWSS3Helper</PackageId>
+    <Product>NetStandardAWSS3Helper</Product>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
