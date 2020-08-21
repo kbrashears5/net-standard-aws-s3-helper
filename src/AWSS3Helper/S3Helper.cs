@@ -15,7 +15,7 @@ namespace AWSS3Helper
     /// <summary>
     /// Implementation of <see cref="IS3Helper"/>
     /// </summary>
-    public class S3Helper : IS3Helper, IDisposable
+    public class S3Helper : IS3Helper
     {
         /// <summary>
         /// Logger
@@ -26,11 +26,6 @@ namespace AWSS3Helper
         /// Client to interact with AWS S3
         /// </summary>
         private AmazonS3Client Client { get; }
-
-        /// <summary>
-        /// Disposed
-        /// </summary>
-        private bool Disposed = false;
 
         /// <summary>
         /// Creates a new instance of <see cref="S3Helper"/>
@@ -49,6 +44,49 @@ namespace AWSS3Helper
 
             this.Client = client ?? new AmazonS3Client(config: options);
         }
+
+        #region IDisposable
+
+        /// <summary>
+        /// Disposed
+        /// </summary>
+        private bool Disposed { get; set; } = false;
+
+        /// <summary>
+        /// Dispose
+        /// </summary>
+        /// <param name="disposing"></param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.Disposed)
+            {
+                if (disposing)
+                {
+                    this.Client?.Dispose();
+
+                    this.Logger?.Dispose();
+                }
+
+                this.Disposed = true;
+            }
+        }
+
+        /// <summary>
+        /// Finalizer
+        /// </summary>
+        ~S3Helper() => this.Dispose(disposing: false);
+
+        /// <summary>
+        /// Dispose
+        /// </summary>
+        public void Dispose()
+        {
+            this.Dispose(disposing: true);
+
+            GC.SuppressFinalize(this);
+        }
+
+        #endregion IDisposable
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
@@ -132,31 +170,6 @@ namespace AWSS3Helper
             this.Logger.LogTrace(JsonConvert.SerializeObject(value: response));
 
             return response;
-        }
-
-        /// <summary>
-        /// Dispose the client
-        /// </summary>
-        public void Dispose()
-        {
-            this.Dispose(disposing: true);
-
-            GC.SuppressFinalize(obj: this);
-        }
-
-        /// <summary>
-        /// Dispose the client
-        /// </summary>
-        /// <param name="disposing"></param>
-        protected virtual void Dispose(bool disposing)
-        {
-            if (this.Disposed)
-                return;
-
-            if (disposing)
-                this.Client.Dispose();
-
-            this.Disposed = true;
         }
 
         public async Task<GetObjectResponse> GetObjectAsync(string bucketName,

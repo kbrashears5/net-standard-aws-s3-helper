@@ -9,7 +9,7 @@ namespace AWSS3Helper
     /// <summary>
     /// Functions to interact with AWS S3 service
     /// </summary>
-    public interface IS3Helper
+    public interface IS3Helper : IDisposable
     {
         /// <summary>
         /// Marks the multipart upload as complete
