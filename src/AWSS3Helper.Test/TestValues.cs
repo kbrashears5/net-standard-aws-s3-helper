@@ -4,7 +4,7 @@ namespace AWSS3Helper.Test
 {
     internal static class TestValues
     {
-        internal static ILogger Logger { get; } = new ConsoleLogger(logLevel: LogLevel.Trace,
+        internal static ILogger Logger { get; } = new ConsoleLogger(logLevel: LogLevel.Off,
             logName: "Log");
 
         internal static IS3Helper S3Helper { get; } = new S3Helper(logger: Logger);
