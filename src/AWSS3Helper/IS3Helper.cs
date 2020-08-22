@@ -1,6 +1,8 @@
 ﻿using Amazon.S3;
 using Amazon.S3.Model;
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -12,79 +14,175 @@ namespace AWSS3Helper
     public interface IS3Helper : IDisposable
     {
         /// <summary>
+        /// Copy an object from source to target
+        /// </summary>
+        /// <param name="sourceBucket">Source bucket name</param>
+        /// <param name="sourceKey">Source key</param>
+        /// <param name="destinationBucket">Destination bucket name</param>
+        /// <param name="destinationKey">Destination key</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        Task<CopyObjectResponse> CopyObjectAsync(string sourceBucket,
+            string sourceKey,
+            string destinationBucket,
+            string destinationKey);
+
+        /// <summary>
+        /// Create a S3 bucket
+        /// </summary>
+        /// <param name="name">Bucket name</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        Task<PutBucketResponse> CreateBucketAsync(string name);
+
+        /// <summary>
+        /// Delete a S3 bucket
+        /// </summary>
+        /// <param name="name">Bucket name</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        Task<DeleteBucketResponse> DeleteBucketAsync(string name);
+
+        /// <summary>
+        /// Delete an object
+        /// </summary>
+        /// <param name="bucket">Bucket name</param>
+        /// <param name="key">Object key</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        Task<DeleteObjectResponse> DeleteObjectAsync(string bucket,
+            string key);
+
+        /// <summary>
+        /// Delete multiple objects
+        /// </summary>
+        /// <param name="bucket">Bucket names</param>
+        /// <param name="keys">List of object keys to delete</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        Task<DeleteObjectsResponse> DeleteObjectsAsync(string bucket,
+            IEnumerable<string> keys);
+
+        /// <summary>
+        /// Delete all the object tags off of an object
+        /// </summary>
+        /// <param name="bucket">Bucket name</param>
+        /// <param name="key">Object key</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        Task<DeleteObjectTaggingResponse> DeleteObjectTagsAsync(string bucket,
+            string key);
+
+        /// <summary>
+        /// Get a JSON typed object from S3
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="bucket">Bucket name</param>
+        /// <param name="key">Object key</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        Task<T> GetObjectAsJsonAsync<T>(string bucket,
+            string key);
+
+        /// <summary>
+        /// Get an object from S3
+        /// </summary>
+        /// <param name="bucket">Bucket name</param>
+        /// <param name="key">Object key</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        Task<GetObjectResponse> GetObjectAsync(string bucket,
+            string key);
+
+        /// <summary>
+        /// Get the contents of an S3 object
+        /// </summary>
+        /// <param name="bucket">Bucket name</param>
+        /// <param name="key">Object key</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        Task<string> GetObjectContentsAsync(string bucket,
+            string key);
+
+        /// <summary>
+        /// Get metadata about an object
+        /// </summary>
+        /// <param name="bucket">Bucket name</param>
+        /// <param name="key">Object key</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        Task<MetadataCollection> GetObjectMetadataAsync(string bucket,
+            string key);
+
+        /// <summary>
+        /// Gets the tags for an object
+        /// </summary>
+        /// <param name="bucket">Bucket name</param>
+        /// <param name="key">Object key</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        Task<IEnumerable<Tag>> GetObjectTagsAsync(string bucket,
+            string key);
+
+        /// <summary>
+        /// Get a signed url to upload to or download from
+        /// </summary>
+        /// <param name="bucket">Bucket name</param>
+        /// <param name="key">Object key</param>
+        /// <param name="type">Type of signed url to get</param>
+        /// <param name="timeoutInMinutes">Timeout for the signed url</param>
+        /// <param name="acl">ACL of file if uploading</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        string GetSignedUrl(string bucket,
+            string key,
+            SignedUrlType type,
+            int timeoutInMinutes,
+            S3CannedACL acl = null);
+
+        /// <summary>
+        /// Move an object within a bucket or to a different bucket
+        /// </summary>
+        /// <param name="sourceBucket">Source bucket name</param>
+        /// <param name="sourceKey">Source key</param>
+        /// <param name="destinationBucket">Destination bucket name</param>
+        /// <param name="destinationKey">Destination key</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        Task<bool> MoveObjectAsync(string sourceBucket,
+            string sourceKey,
+            string destinationBucket,
+            string destinationKey);
+
+        /// <summary>
         /// Marks the multipart upload as complete
         /// </summary>
-        /// <param name="bucketName">Bucket name</param>
-        /// <param name="s3Prefix">Prefix and file name to upload to</param>
-        /// <param name="uploadId">The UploadId for the multipart object to add to</param>
+        /// <param name="bucket">Bucket name</param>
+        /// <param name="key">Object key</param>
+        /// <param name="uploadId">The UploadId of the multipart object</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
-        Task<CompleteMultipartUploadResponse> CompleteMultipartUploadAsync(string bucketName,
-            string s3Prefix,
+        Task<CompleteMultipartUploadResponse> MultipartUploadCompleteAsync(string bucket,
+            string key,
             string uploadId);
-
-        /// <summary>
-        /// Creates a temporary file to upload to S3
-        /// </summary>
-        /// <param name="contents">File contents</param>
-        /// <param name="encoding">Text encoding</param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentNullException"></exception>
-        string CreateTempFile(string contents,
-            Encoding encoding = null);
-
-        /// <summary>
-        /// Deletes a given S3 object
-        /// </summary>
-        /// <param name="bucketName">Bucket name</param>
-        /// <param name="s3Prefix">Prefix and file name to upload to</param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentNullException"></exception>
-        Task<DeleteObjectResponse> DeleteObjectAsync(string bucketName,
-            string s3Prefix);
-
-        /// <summary>
-        /// Retrieves the contents of an S3 object
-        /// </summary>
-        /// <param name="bucketName">Bucket name</param>
-        /// <param name="s3Prefix">Prefix and file name to upload to</param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentNullException"></exception>
-        Task<GetObjectResponse> GetObjectAsync(string bucketName,
-            string s3Prefix);
 
         /// <summary>
         /// Starts a multipart upload for a S3 object
         /// </summary>
-        /// <param name="bucketName">Bucket name</param>
-        /// <param name="s3Prefix">Prefix and file name to upload to</param>
+        /// <param name="bucket">Bucket name</param>
+        /// <param name="key">Object key</param>
         /// <param name="s3CannedAcl">ACL Permissions</param>
         /// <returns></returns>
         /// <exception cref="ArgumentNullException"></exception>
-        Task<string> StartMultipartUploadAsync(string bucketName,
-           string s3Prefix,
+        Task<string> MultipartUploadStartAsync(string bucket,
+           string key,
            S3CannedACL s3CannedAcl = null);
 
         /// <summary>
-        /// Uploads a file to S3
+        /// Upload a part to a S3 multipart object
         /// </summary>
-        /// <param name="bucketName">Bucket name</param>
-        /// <param name="s3Prefix">Prefix and file name to upload to</param>
-        /// <param name="contents">Contents to upload</param>
-        /// <param name="s3CannedAcl">ACL Permissions</param>
-        /// <param name="encoding">Text encoding</param>
-        /// <exception cref="ArgumentNullException"></exception>
-        Task UploadFileAsync(string bucketName,
-              string s3Prefix,
-              string contents,
-              S3CannedACL s3CannedAcl = null,
-              Encoding encoding = null);
-
-        /// <summary>
-        /// Uploads a file as a part to an S3 multipart object
-        /// </summary>
-        /// <param name="bucketName">Bucket name</param>
-        /// <param name="s3Prefix">Prefix and file name to upload to</param>
+        /// <param name="bucket">Bucket name</param>
+        /// <param name="key">Object key</param>
         /// <param name="uploadId">The UploadId for the multipart object to add to</param>
         /// <param name="uploadPart">Part number of the part being uploaded</param>
         /// <param name="contents">Contents to upload</param>
@@ -93,11 +191,65 @@ namespace AWSS3Helper
         /// <exception cref="ArgumentException"></exception>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentOutOfRangeException"></exception>
-        Task<UploadPartResponse> UploadFilePartAsync(string bucketName,
-            string s3Prefix,
+        Task<UploadPartResponse> MultipartUploadUploadPartAsync(string bucket,
+            string key,
             string uploadId,
             int uploadPart,
             string contents,
             Encoding encoding = null);
+
+        /// <summary>
+        /// Upload an object to S3
+        /// </summary>
+        /// <param name="bucket">Bucket name</param>
+        /// <param name="key">Object key</param>
+        /// <param name="contents">Object contents as a string</param>
+        /// <param name="s3CannedAcl">ACL permissions</param>
+        /// <param name="encoding">Text encoding</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        Task<PutObjectResponse> PutObjectAsync(string bucket,
+              string key,
+              string contents,
+              S3CannedACL s3CannedAcl = null,
+              Encoding encoding = null);
+
+        /// <summary>
+        /// Upload an object to S3
+        /// </summary>
+        /// <param name="bucket">Bucket name</param>
+        /// <param name="key">Object key</param>
+        /// <param name="contents">Object contents as a <see cref="Stream"/></param>
+        /// <param name="s3CannedAcl">ACL permissions</param>
+        /// <exception cref="ArgumentNullException"></exception>
+        Task<PutObjectResponse> PutObjectAsync(string bucket,
+              string key,
+              Stream contents,
+              S3CannedACL s3CannedAcl = null);
+
+        /// <summary>
+        /// Inserts or updates a tag on an object
+        /// </summary>
+        /// <param name="bucket">Bucket name</param>
+        /// <param name="key">Object key</param>
+        /// <param name="tagName">Tag name</param>
+        /// <param name="tagValue">Tag value</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        Task<PutObjectTaggingResponse> SetObjectTagAsync(string bucket,
+            string key,
+            string tagName,
+            string tagValue);
+
+        /// <summary>
+        /// Set the tags on an object
+        /// </summary>
+        /// <param name="bucket">Bucket name</param>
+        /// <param name="key">Object key</param>
+        /// <param name="tags">Tags</param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        Task<PutObjectTaggingResponse> SetObjectTagsAsync(string bucket,
+            string key,
+            IEnumerable<Tag> tags);
     }
 }

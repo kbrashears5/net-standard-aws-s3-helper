@@ -1,6 +1,10 @@
 ﻿using Amazon.S3;
 using Amazon.S3.Model;
+using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
@@ -54,79 +58,193 @@ namespace AWSS3Helper
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 
-        public Task<CompleteMultipartUploadResponse> CompleteMultipartUploadAsync(string bucketName,
-            string s3Prefix,
-            string uploadId)
+        public Task<CopyObjectResponse> CopyObjectAsync(string sourceBucket,
+            string sourceKey,
+            string destinationBucket,
+            string destinationKey)
         {
-            var response = new CompleteMultipartUploadResponse()
+            return Task.FromResult(new CopyObjectResponse()
             {
                 HttpStatusCode = HttpStatusCode.OK,
-            };
-
-            return Task.FromResult(response);
+            });
         }
 
-        public string CreateTempFile(string contents,
-            Encoding encoding = null)
+        public Task<PutBucketResponse> CreateBucketAsync(string name)
         {
-            return Text.FilePath;
+            return Task.FromResult(new PutBucketResponse()
+            {
+                HttpStatusCode = HttpStatusCode.OK,
+            });
+        }
+
+        public Task<DeleteBucketResponse> DeleteBucketAsync(string name)
+        {
+            return Task.FromResult(new DeleteBucketResponse()
+            {
+                HttpStatusCode = HttpStatusCode.OK,
+            });
         }
 
         public Task<DeleteObjectResponse> DeleteObjectAsync(string bucketName,
             string s3Prefix)
         {
-            var response = new DeleteObjectResponse()
+            return Task.FromResult(new DeleteObjectResponse()
             {
                 HttpStatusCode = HttpStatusCode.OK,
-            };
+            });
+        }
 
-            return Task.FromResult(response);
+        public Task<DeleteObjectsResponse> DeleteObjectsAsync(string bucket,
+            IEnumerable<string> keys)
+        {
+            return Task.FromResult(new DeleteObjectsResponse()
+            {
+                HttpStatusCode = HttpStatusCode.OK,
+            });
+        }
+
+        public Task<DeleteObjectTaggingResponse> DeleteObjectTagsAsync(string bucket,
+            string key)
+        {
+            return Task.FromResult(new DeleteObjectTaggingResponse()
+            {
+                HttpStatusCode = HttpStatusCode.OK,
+            });
+        }
+
+        public Task<T> GetObjectAsJsonAsync<T>(string bucket,
+            string key)
+        {
+            var str = this.GetObjectContentsAsync(bucket: null,
+                key: null).Result;
+
+            return Task.FromResult(JsonConvert.DeserializeObject<T>(str));
         }
 
         public Task<GetObjectResponse> GetObjectAsync(string bucketName,
             string s3Prefix)
         {
-            var response = new GetObjectResponse()
+            return Task.FromResult(new GetObjectResponse()
             {
                 BucketName = bucketName,
                 HttpStatusCode = HttpStatusCode.OK,
                 Key = s3Prefix,
-            };
-
-            return Task.FromResult(response);
+            });
         }
 
-        public Task<string> StartMultipartUploadAsync(string bucketName,
+        public Task<string> GetObjectContentsAsync(string bucket,
+            string key)
+        {
+            var dictionary = new Dictionary<string, string>()
+            {
+                { "key1", "value1" },
+                { "key2", "value2" },
+            };
+
+            return Task.FromResult(JsonConvert.SerializeObject(dictionary));
+        }
+
+        public Task<MetadataCollection> GetObjectMetadataAsync(string bucket,
+            string key)
+        {
+            return Task.FromResult(new MetadataCollection());
+        }
+
+        public Task<IEnumerable<Tag>> GetObjectTagsAsync(string bucket,
+            string key)
+        {
+            return Task.FromResult(new List<Tag>() { new Tag() { Key = "Key", Value = "Value" } }.AsEnumerable());
+        }
+
+        public string GetSignedUrl(string bucket,
+            string key,
+            SignedUrlType type,
+            int timeoutInMinutes,
+            S3CannedACL acl)
+        {
+            return Text.FilePath;
+        }
+
+        public Task<bool> MoveObjectAsync(string sourceBucket,
+            string sourceKey,
+            string destinationBucket,
+            string destinationKey)
+        {
+            return Task.FromResult(true);
+        }
+
+        public Task<CompleteMultipartUploadResponse> MultipartUploadCompleteAsync(string bucketName,
+            string s3Prefix,
+            string uploadId)
+        {
+            return Task.FromResult(new CompleteMultipartUploadResponse()
+            {
+                HttpStatusCode = HttpStatusCode.OK,
+            });
+        }
+
+        public Task<string> MultipartUploadStartAsync(string bucketName,
             string s3Prefix,
             S3CannedACL s3CannedAcl = null)
         {
-            var response = nameof(Text.UploadId);
-
-            return Task.FromResult(response);
+            return Task.FromResult(Text.UploadId);
         }
 
-        public Task UploadFileAsync(string bucketName,
-            string s3Prefix,
-            string contents,
-            S3CannedACL s3CannedAcl = null,
-            Encoding encoding = null)
-        {
-            return Task.FromResult(string.Empty);
-        }
-
-        public Task<UploadPartResponse> UploadFilePartAsync(string bucketName,
+        public Task<UploadPartResponse> MultipartUploadUploadPartAsync(string bucketName,
             string s3Prefix,
             string uploadId,
             int uploadPart,
             string contents,
             Encoding encoding = null)
         {
-            var response = new UploadPartResponse()
+            return Task.FromResult(new UploadPartResponse()
             {
                 HttpStatusCode = HttpStatusCode.OK,
-            };
+            });
+        }
 
-            return Task.FromResult(response);
+        public Task<PutObjectResponse> PutObjectAsync(string bucket,
+            string key,
+            string contents,
+            S3CannedACL s3CannedAcl = null,
+            Encoding encoding = null)
+        {
+            return Task.FromResult(new PutObjectResponse()
+            {
+                HttpStatusCode = HttpStatusCode.OK,
+            });
+        }
+
+        public Task<PutObjectResponse> PutObjectAsync(string bucket,
+            string key,
+            Stream contents,
+            S3CannedACL s3CannedAcl = null)
+        {
+            return Task.FromResult(new PutObjectResponse()
+            {
+                HttpStatusCode = HttpStatusCode.OK,
+            });
+        }
+
+        public Task<PutObjectTaggingResponse> SetObjectTagAsync(string bucket,
+            string key,
+            string tagName,
+            string tagValue)
+        {
+            return Task.FromResult(new PutObjectTaggingResponse()
+            {
+                HttpStatusCode = HttpStatusCode.OK,
+            });
+        }
+
+        public Task<PutObjectTaggingResponse> SetObjectTagsAsync(string bucket,
+            string key,
+            IEnumerable<Tag> tags)
+        {
+            return Task.FromResult(new PutObjectTaggingResponse()
+            {
+                HttpStatusCode = HttpStatusCode.OK,
+            });
         }
 
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
