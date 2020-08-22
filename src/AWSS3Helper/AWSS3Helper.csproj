@@ -18,7 +18,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Amazon.S3" Version="0.17.7" />
     <PackageReference Include="AWSSDK.S3" Version="3.5.0" />
     <PackageReference Include="NetStandardLogger" Version="2.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
