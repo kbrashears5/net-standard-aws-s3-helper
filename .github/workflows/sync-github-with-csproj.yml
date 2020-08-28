@@ -17,5 +17,5 @@ jobs:
         uses: kbrashears5/github-action-repo-sync@master
         with:
           TYPE: nuget
-          PATH: src/AWSS3Helper/S3Helper.csproj
+          PATH: src/AWSS3Helper/AWSS3Helper.csproj
           TOKEN: ${{ secrets.ACTIONS }}
