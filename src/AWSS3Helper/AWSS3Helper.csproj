@@ -11,6 +11,7 @@
     <RepositoryType>github</RepositoryType>
     <PackageId>NetStandardAWSS3Helper</PackageId>
     <Product>NetStandardAWSS3Helper</Product>
+    <PackageTags>AWS;S3;Helper;NetStandard</PackageTags>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -18,7 +19,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AWSSDK.S3" Version="3.5.0" />
+    <PackageReference Include="AWSSDK.S3" Version="3.5.0.9" />
     <PackageReference Include="NetStandardLogger" Version="2.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
