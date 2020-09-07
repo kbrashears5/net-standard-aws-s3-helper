@@ -11,7 +11,7 @@
     <RepositoryType>github</RepositoryType>
     <PackageId>NetStandardAWSS3Helper</PackageId>
     <Product>NetStandardAWSS3Helper</Product>
-    <PackageTags>AWS;S3;Helper;NetStandard</PackageTags>
+    <PackageTags>aws;s3;helper;netStandard</PackageTags>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
