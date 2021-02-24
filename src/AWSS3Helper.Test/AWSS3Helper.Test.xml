@@ -1,0 +1,153 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AWSS3Helper.Test</name>
+    </assembly>
+    <members>
+        <member name="T:AWSS3Helper.Test.S3Helper_Tests">
+            <summary>
+            Tests the <see cref="T:AWSS3Helper.S3Helper"/> class
+            </summary>
+        </member>
+        <member name="M:AWSS3Helper.Test.S3Helper_Tests.Constructor_Null_Logger">
+            <summary>
+            Test that the constructor throws on null <see cref="T:Logger.ILogger"/>
+            </summary>
+        </member>
+        <member name="M:AWSS3Helper.Test.S3Helper_Tests.Constructor">
+            <summary>
+            Test that the constructor is created successfully
+            </summary>
+        </member>
+        <member name="M:AWSS3Helper.Test.S3Helper_Tests.CompleteMultipartUploadAsync_Null_BucketName">
+            <summary>
+            Test that the function throws on null bucketName
+            </summary>
+        </member>
+        <member name="M:AWSS3Helper.Test.S3Helper_Tests.CompleteMultipartUploadAsync_Null_S3Prefix">
+            <summary>
+            Test that the function throws on null s3Prefix
+            </summary>
+        </member>
+        <member name="M:AWSS3Helper.Test.S3Helper_Tests.CompleteMultipartUploadAsync_Null_UploadId">
+            <summary>
+            Test that the function throws on null uploadId
+            </summary>
+        </member>
+        <member name="M:AWSS3Helper.Test.S3Helper_Tests.CompleteMultipartUploadAsync">
+            <summary>
+            Test that the function completes the multi part upload
+            </summary>
+        </member>
+        <member name="M:AWSS3Helper.Test.S3Helper_Tests.CreateTempFile_Null_Contents">
+            <summary>
+            Test that the function throws on null contents
+            </summary>
+        </member>
+        <member name="M:AWSS3Helper.Test.S3Helper_Tests.CreateTempFile">
+            <summary>
+            Test that the function creates the temp file
+            </summary>
+        </member>
+        <member name="M:AWSS3Helper.Test.S3Helper_Tests.DeleteObjectAsync_Null_BucketName">
+            <summary>
+            Test that the function throws on null bucketName
+            </summary>
+        </member>
+        <member name="M:AWSS3Helper.Test.S3Helper_Tests.DeleteObjectAsync_Null_S3Prefix">
+            <summary>
+            Test that the function throws on null s3Prefix
+            </summary>
+        </member>
+        <member name="M:AWSS3Helper.Test.S3Helper_Tests.DeleteObjectAsync">
+            <summary>
+            Test that the function deletes the object
+            </summary>
+        </member>
+        <member name="M:AWSS3Helper.Test.S3Helper_Tests.GetObjectAsync_Null_BucketName">
+            <summary>
+            Test that the function throws on null bucketName
+            </summary>
+        </member>
+        <member name="M:AWSS3Helper.Test.S3Helper_Tests.GetObjectAsync_Null_S3Prefix">
+            <summary>
+            Test that the function throws on null s3Prefix
+            </summary>
+        </member>
+        <member name="M:AWSS3Helper.Test.S3Helper_Tests.GetObjectAsync">
+            <summary>
+            Test that the function gets the object
+            </summary>
+        </member>
+        <member name="M:AWSS3Helper.Test.S3Helper_Tests.StartMultipartUploadAsync_Null_BucketName">
+            <summary>
+            Test that the function throws on null bucketName
+            </summary>
+        </member>
+        <member name="M:AWSS3Helper.Test.S3Helper_Tests.StartMultipartUploadAsync_Null_S3Prefix">
+            <summary>
+            Test that the function throws on null s3Prefix
+            </summary>
+        </member>
+        <member name="M:AWSS3Helper.Test.S3Helper_Tests.StartMultipartUploadAsync">
+            <summary>
+            Test that the function starts the multipart upload
+            </summary>
+        </member>
+        <member name="M:AWSS3Helper.Test.S3Helper_Tests.UploadFileAsync_Null_BucketName">
+            <summary>
+            Test that the function throws on null bucketName
+            </summary>
+        </member>
+        <member name="M:AWSS3Helper.Test.S3Helper_Tests.UploadFileAsync_Null_S3Prefix">
+            <summary>
+            Test that the function throws on null s3Prefix
+            </summary>
+        </member>
+        <member name="M:AWSS3Helper.Test.S3Helper_Tests.UploadFileAsync_Null_Contents">
+            <summary>
+            Test that the function throws on null contents
+            </summary>
+        </member>
+        <member name="M:AWSS3Helper.Test.S3Helper_Tests.UploadFileAsync">
+            <summary>
+            Test that the function starts the multipart upload
+            </summary>
+        </member>
+        <member name="M:AWSS3Helper.Test.S3Helper_Tests.UploadFilePartAsync_Null_BucketName">
+            <summary>
+            Test that the function throws on null bucketName
+            </summary>
+        </member>
+        <member name="M:AWSS3Helper.Test.S3Helper_Tests.UploadFilePartAsync_Null_S3Prefix">
+            <summary>
+            Test that the function throws on null s3Prefix
+            </summary>
+        </member>
+        <member name="M:AWSS3Helper.Test.S3Helper_Tests.UploadFilePartAsync_Null_UploadId">
+            <summary>
+            Test that the function throws on null uploadId
+            </summary>
+        </member>
+        <member name="M:AWSS3Helper.Test.S3Helper_Tests.UploadFilePartAsync_Zero_UploadPart">
+            <summary>
+            Test that the function throws on uploadPart being 0
+            </summary>
+        </member>
+        <member name="M:AWSS3Helper.Test.S3Helper_Tests.UploadFilePartAsync_Null_Contents">
+            <summary>
+            Test that the function throws on null contents
+            </summary>
+        </member>
+        <member name="M:AWSS3Helper.Test.S3Helper_Tests.UploadFilePartAsync_TooSmallFile">
+            <summary>
+            Test that the function throws on too small of a file
+            </summary>
+        </member>
+        <member name="M:AWSS3Helper.Test.S3Helper_Tests.UploadFilePartAsync">
+            <summary>
+            Test that the function starts the multipart upload
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,157 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>AWSS3Helper</name>
+    </assembly>
+    <members>
+        <member name="T:AWSS3Helper.IS3Helper">
+            <summary>
+            Functions to interact with AWS S3 service
+            </summary>
+        </member>
+        <member name="M:AWSS3Helper.IS3Helper.CompleteMultipartUploadAsync(System.String,System.String,System.String)">
+            <summary>
+            Marks the multipart upload as complete
+            </summary>
+            <param name="bucketName">Bucket name</param>
+            <param name="s3Prefix">Prefix and file name to upload to</param>
+            <param name="uploadId">The UploadId for the multipart object to add to</param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:AWSS3Helper.IS3Helper.CreateTempFile(System.String,System.Text.Encoding)">
+            <summary>
+            Creates a temporary file to upload to S3
+            </summary>
+            <param name="contents">File contents</param>
+            <param name="encoding">Text encoding</param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:AWSS3Helper.IS3Helper.DeleteObjectAsync(System.String,System.String)">
+            <summary>
+            Deletes a given S3 object
+            </summary>
+            <param name="bucketName">Bucket name</param>
+            <param name="s3Prefix">Prefix and file name to upload to</param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:AWSS3Helper.IS3Helper.GetObjectAsync(System.String,System.String)">
+            <summary>
+            Retrieves the contents of an S3 object
+            </summary>
+            <param name="bucketName">Bucket name</param>
+            <param name="s3Prefix">Prefix and file name to upload to</param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:AWSS3Helper.IS3Helper.StartMultipartUploadAsync(System.String,System.String,Amazon.S3.S3CannedACL)">
+            <summary>
+            Starts a multipart upload for a S3 object
+            </summary>
+            <param name="bucketName">Bucket name</param>
+            <param name="s3Prefix">Prefix and file name to upload to</param>
+            <param name="s3CannedAcl">ACL Permissions</param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:AWSS3Helper.IS3Helper.UploadFileAsync(System.String,System.String,System.String,Amazon.S3.S3CannedACL,System.Text.Encoding)">
+            <summary>
+            Uploads a file to S3
+            </summary>
+            <param name="bucketName">Bucket name</param>
+            <param name="s3Prefix">Prefix and file name to upload to</param>
+            <param name="contents">Contents to upload</param>
+            <param name="s3CannedAcl">ACL Permissions</param>
+            <param name="encoding">Text encoding</param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="M:AWSS3Helper.IS3Helper.UploadFilePartAsync(System.String,System.String,System.String,System.Int32,System.String,System.Text.Encoding)">
+            <summary>
+            Uploads a file as a part to an S3 multipart object
+            </summary>
+            <param name="bucketName">Bucket name</param>
+            <param name="s3Prefix">Prefix and file name to upload to</param>
+            <param name="uploadId">The UploadId for the multipart object to add to</param>
+            <param name="uploadPart">Part number of the part being uploaded</param>
+            <param name="contents">Contents to upload</param>
+            <param name="encoding">Text encoding</param>
+            <returns></returns>
+            <exception cref="T:System.ArgumentException"></exception>
+            <exception cref="T:System.ArgumentNullException"></exception>
+            <exception cref="T:System.ArgumentOutOfRangeException"></exception>
+        </member>
+        <member name="T:AWSS3Helper.S3Helper">
+            <summary>
+            Implementation of <see cref="T:AWSS3Helper.IS3Helper"/>
+            </summary>
+        </member>
+        <member name="P:AWSS3Helper.S3Helper.Logger">
+            <summary>
+            Logger
+            </summary>
+        </member>
+        <member name="P:AWSS3Helper.S3Helper.Client">
+            <summary>
+            Client to interact with AWS S3
+            </summary>
+        </member>
+        <member name="M:AWSS3Helper.S3Helper.#ctor(Logger.ILogger,Amazon.S3.AmazonS3Client,Amazon.S3.AmazonS3Config)">
+            <summary>
+            Creates a new instance of <see cref="T:AWSS3Helper.S3Helper"/>
+            </summary>
+            <param name="logger">ILogger</param>
+            <param name="client"><see cref="T:Amazon.S3.AmazonS3Client"/> - If none is provided, will create new instance in account that lambda is running in</param>
+            <param name="options"><see cref="T:Amazon.S3.AmazonS3Config"/>- Only used if the client is not supplied. Defaults to <see cref="F:Amazon.RegionEndpoint.USEast1"/> Region</param>
+            <exception cref="T:System.ArgumentNullException"></exception>
+        </member>
+        <member name="P:AWSS3Helper.S3Helper.Disposed">
+            <summary>
+            Disposed
+            </summary>
+        </member>
+        <member name="M:AWSS3Helper.S3Helper.Dispose(System.Boolean)">
+            <summary>
+            Dispose
+            </summary>
+            <param name="disposing"></param>
+        </member>
+        <member name="M:AWSS3Helper.S3Helper.Finalize">
+            <summary>
+            Finalizer
+            </summary>
+        </member>
+        <member name="M:AWSS3Helper.S3Helper.Dispose">
+            <summary>
+            Dispose
+            </summary>
+        </member>
+        <member name="T:AWSS3Helper.S3Helper_Mock">
+            <summary>
+            Mock implementation of <see cref="T:AWSS3Helper.IS3Helper"/>
+            </summary>
+        </member>
+        <member name="P:AWSS3Helper.S3Helper_Mock.Disposed">
+            <summary>
+            Disposed
+            </summary>
+        </member>
+        <member name="M:AWSS3Helper.S3Helper_Mock.Dispose(System.Boolean)">
+            <summary>
+            Dispose
+            </summary>
+            <param name="disposing"></param>
+        </member>
+        <member name="M:AWSS3Helper.S3Helper_Mock.Finalize">
+            <summary>
+            Finalizer
+            </summary>
+        </member>
+        <member name="M:AWSS3Helper.S3Helper_Mock.Dispose">
+            <summary>
+            Dispose
+            </summary>
+        </member>
+    </members>
+</doc>
