@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AWSS3Helper
@@ -61,7 +62,8 @@ namespace AWSS3Helper
         public Task<CopyObjectResponse> CopyObjectAsync(string sourceBucket,
             string sourceKey,
             string destinationBucket,
-            string destinationKey)
+            string destinationKey,
+            CancellationToken cancellationToken = default)
         {
             return Task.FromResult(new CopyObjectResponse()
             {
@@ -69,7 +71,8 @@ namespace AWSS3Helper
             });
         }
 
-        public Task<PutBucketResponse> CreateBucketAsync(string name)
+        public Task<PutBucketResponse> CreateBucketAsync(string name,
+            CancellationToken cancellationToken = default)
         {
             return Task.FromResult(new PutBucketResponse()
             {
@@ -77,7 +80,8 @@ namespace AWSS3Helper
             });
         }
 
-        public Task<DeleteBucketResponse> DeleteBucketAsync(string name)
+        public Task<DeleteBucketResponse> DeleteBucketAsync(string name,
+            CancellationToken cancellationToken = default)
         {
             return Task.FromResult(new DeleteBucketResponse()
             {
@@ -86,7 +90,8 @@ namespace AWSS3Helper
         }
 
         public Task<DeleteObjectResponse> DeleteObjectAsync(string bucketName,
-            string s3Prefix)
+            string s3Prefix,
+            CancellationToken cancellationToken = default)
         {
             return Task.FromResult(new DeleteObjectResponse()
             {
@@ -95,7 +100,8 @@ namespace AWSS3Helper
         }
 
         public Task<DeleteObjectsResponse> DeleteObjectsAsync(string bucket,
-            IEnumerable<string> keys)
+            IEnumerable<string> keys,
+            CancellationToken cancellationToken = default)
         {
             return Task.FromResult(new DeleteObjectsResponse()
             {
@@ -104,7 +110,8 @@ namespace AWSS3Helper
         }
 
         public Task<DeleteObjectTaggingResponse> DeleteObjectTagsAsync(string bucket,
-            string key)
+            string key,
+            CancellationToken cancellationToken = default)
         {
             return Task.FromResult(new DeleteObjectTaggingResponse()
             {
@@ -113,7 +120,8 @@ namespace AWSS3Helper
         }
 
         public Task<T> GetObjectAsJsonAsync<T>(string bucket,
-            string key)
+            string key,
+            CancellationToken cancellationToken = default)
         {
             var str = this.GetObjectContentsAsync(bucket: null,
                 key: null).Result;
@@ -122,7 +130,8 @@ namespace AWSS3Helper
         }
 
         public Task<GetObjectResponse> GetObjectAsync(string bucketName,
-            string s3Prefix)
+            string s3Prefix,
+            CancellationToken cancellationToken = default)
         {
             return Task.FromResult(new GetObjectResponse()
             {
@@ -133,7 +142,8 @@ namespace AWSS3Helper
         }
 
         public Task<string> GetObjectContentsAsync(string bucket,
-            string key)
+            string key,
+            CancellationToken cancellationToken = default)
         {
             var dictionary = new Dictionary<string, string>()
             {
@@ -145,13 +155,15 @@ namespace AWSS3Helper
         }
 
         public Task<MetadataCollection> GetObjectMetadataAsync(string bucket,
-            string key)
+            string key,
+            CancellationToken cancellationToken = default)
         {
             return Task.FromResult(new MetadataCollection());
         }
 
         public Task<IEnumerable<Tag>> GetObjectTagsAsync(string bucket,
-            string key)
+            string key,
+            CancellationToken cancellationToken = default)
         {
             return Task.FromResult(new List<Tag>() { new Tag() { Key = "Key", Value = "Value" } }.AsEnumerable());
         }
@@ -168,14 +180,16 @@ namespace AWSS3Helper
         public Task<bool> MoveObjectAsync(string sourceBucket,
             string sourceKey,
             string destinationBucket,
-            string destinationKey)
+            string destinationKey,
+            CancellationToken cancellationToken = default)
         {
             return Task.FromResult(true);
         }
 
         public Task<CompleteMultipartUploadResponse> MultipartUploadCompleteAsync(string bucketName,
             string s3Prefix,
-            string uploadId)
+            string uploadId,
+            CancellationToken cancellationToken = default)
         {
             return Task.FromResult(new CompleteMultipartUploadResponse()
             {
@@ -185,7 +199,8 @@ namespace AWSS3Helper
 
         public Task<string> MultipartUploadStartAsync(string bucketName,
             string s3Prefix,
-            S3CannedACL s3CannedAcl = null)
+            S3CannedACL s3CannedAcl = null,
+            CancellationToken cancellationToken = default)
         {
             return Task.FromResult(Text.UploadId);
         }
@@ -195,7 +210,8 @@ namespace AWSS3Helper
             string uploadId,
             int uploadPart,
             string contents,
-            Encoding encoding = null)
+            Encoding encoding = null,
+            CancellationToken cancellationToken = default)
         {
             return Task.FromResult(new UploadPartResponse()
             {
@@ -207,7 +223,8 @@ namespace AWSS3Helper
             string key,
             string contents,
             S3CannedACL s3CannedAcl = null,
-            Encoding encoding = null)
+            Encoding encoding = null,
+            CancellationToken cancellationToken = default)
         {
             return Task.FromResult(new PutObjectResponse()
             {
@@ -218,7 +235,8 @@ namespace AWSS3Helper
         public Task<PutObjectResponse> PutObjectAsync(string bucket,
             string key,
             Stream contents,
-            S3CannedACL s3CannedAcl = null)
+            S3CannedACL s3CannedAcl = null,
+            CancellationToken cancellationToken = default)
         {
             return Task.FromResult(new PutObjectResponse()
             {
@@ -229,7 +247,8 @@ namespace AWSS3Helper
         public Task<PutObjectTaggingResponse> SetObjectTagAsync(string bucket,
             string key,
             string tagName,
-            string tagValue)
+            string tagValue,
+            CancellationToken cancellationToken = default)
         {
             return Task.FromResult(new PutObjectTaggingResponse()
             {
@@ -239,7 +258,8 @@ namespace AWSS3Helper
 
         public Task<PutObjectTaggingResponse> SetObjectTagsAsync(string bucket,
             string key,
-            IEnumerable<Tag> tags)
+            IEnumerable<Tag> tags,
+            CancellationToken cancellationToken = default)
         {
             return Task.FromResult(new PutObjectTaggingResponse()
             {

@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AWSS3Helper
@@ -28,6 +29,8 @@ namespace AWSS3Helper
         /// </summary>
         private AmazonS3Client Repository { get; }
 
+        private CancellationTokenSource CancellationToken { get; }
+
         /// <summary>
         /// Creates a new instance of <see cref="S3Helper"/>
         /// </summary>
@@ -44,6 +47,8 @@ namespace AWSS3Helper
             if (options == null) options = new AmazonS3Config { RegionEndpoint = RegionEndpoint.USEast1 };
 
             this.Repository = repository ?? new AmazonS3Client(config: options);
+
+            this.CancellationToken = new CancellationTokenSource();
         }
 
         #region IDisposable
@@ -63,6 +68,16 @@ namespace AWSS3Helper
             {
                 if (disposing)
                 {
+                    try
+                    {
+                        this.CancellationToken?.Cancel();
+                    }
+                    catch (ObjectDisposedException)
+                    {
+                    }
+
+                    this.CancellationToken?.Dispose();
+
                     this.Repository?.Dispose();
 
                     this.Logger?.Dispose();
@@ -94,7 +109,8 @@ namespace AWSS3Helper
         public async Task<CopyObjectResponse> CopyObjectAsync(string sourceBucket,
             string sourceKey,
             string destinationBucket,
-            string destinationKey)
+            string destinationKey,
+            CancellationToken cancellationToken = default)
         {
             this.Logger.LogDebug($"[{nameof(this.CopyObjectAsync)}]");
 
@@ -115,14 +131,16 @@ namespace AWSS3Helper
 
             this.Logger.LogTrace(JsonConvert.SerializeObject(value: request));
 
-            var response = await this.Repository.CopyObjectAsync(request: request);
+            var response = await this.Repository.CopyObjectAsync(request: request,
+                cancellationToken: cancellationToken == default ? this.CancellationToken.Token : cancellationToken);
 
             this.Logger.LogTrace(JsonConvert.SerializeObject(value: response));
 
             return response;
         }
 
-        public async Task<PutBucketResponse> CreateBucketAsync(string name)
+        public async Task<PutBucketResponse> CreateBucketAsync(string name,
+            CancellationToken cancellationToken = default)
         {
             this.Logger.LogDebug($"[{nameof(this.CreateBucketAsync)}]");
 
@@ -137,7 +155,8 @@ namespace AWSS3Helper
 
             this.Logger.LogTrace(JsonConvert.SerializeObject(value: request));
 
-            var response = await this.Repository.PutBucketAsync(request: request);
+            var response = await this.Repository.PutBucketAsync(request: request,
+                cancellationToken: cancellationToken == default ? this.CancellationToken.Token : cancellationToken);
 
             this.Logger.LogTrace(JsonConvert.SerializeObject(value: response));
 
@@ -176,7 +195,8 @@ namespace AWSS3Helper
             return tempPath;
         }
 
-        public async Task<DeleteBucketResponse> DeleteBucketAsync(string name)
+        public async Task<DeleteBucketResponse> DeleteBucketAsync(string name,
+            CancellationToken cancellationToken = default)
         {
             this.Logger.LogDebug($"[{nameof(this.DeleteBucketAsync)}]");
 
@@ -191,7 +211,8 @@ namespace AWSS3Helper
 
             this.Logger.LogTrace(JsonConvert.SerializeObject(value: request));
 
-            var response = await this.Repository.DeleteBucketAsync(request: request);
+            var response = await this.Repository.DeleteBucketAsync(request: request,
+                cancellationToken: cancellationToken == default ? this.CancellationToken.Token : cancellationToken);
 
             this.Logger.LogTrace(JsonConvert.SerializeObject(value: response));
 
@@ -199,7 +220,8 @@ namespace AWSS3Helper
         }
 
         public async Task<DeleteObjectResponse> DeleteObjectAsync(string bucket,
-            string key)
+            string key,
+            CancellationToken cancellationToken = default)
         {
             this.Logger.LogDebug($"[{nameof(this.DeleteObjectAsync)}]");
 
@@ -216,7 +238,8 @@ namespace AWSS3Helper
 
             this.Logger.LogTrace(JsonConvert.SerializeObject(value: request));
 
-            var response = await this.Repository.DeleteObjectAsync(request: request);
+            var response = await this.Repository.DeleteObjectAsync(request: request,
+                cancellationToken: cancellationToken == default ? this.CancellationToken.Token : cancellationToken);
 
             this.Logger.LogTrace(JsonConvert.SerializeObject(value: response));
 
@@ -224,7 +247,8 @@ namespace AWSS3Helper
         }
 
         public async Task<DeleteObjectsResponse> DeleteObjectsAsync(string bucket,
-            IEnumerable<string> keys)
+            IEnumerable<string> keys,
+            CancellationToken cancellationToken = default)
         {
             this.Logger.LogDebug($"[{nameof(this.DeleteObjectsAsync)}]");
 
@@ -245,7 +269,8 @@ namespace AWSS3Helper
 
             this.Logger.LogTrace(JsonConvert.SerializeObject(value: request));
 
-            var response = await this.Repository.DeleteObjectsAsync(request: request);
+            var response = await this.Repository.DeleteObjectsAsync(request: request,
+                cancellationToken: cancellationToken == default ? this.CancellationToken.Token : cancellationToken);
 
             this.Logger.LogTrace(JsonConvert.SerializeObject(value: response));
 
@@ -253,7 +278,8 @@ namespace AWSS3Helper
         }
 
         public async Task<DeleteObjectTaggingResponse> DeleteObjectTagsAsync(string bucket,
-            string key)
+            string key,
+            CancellationToken cancellationToken = default)
         {
             this.Logger.LogDebug($"[{nameof(this.DeleteObjectTagsAsync)}]");
 
@@ -270,7 +296,8 @@ namespace AWSS3Helper
 
             this.Logger.LogTrace(JsonConvert.SerializeObject(value: request));
 
-            var response = await this.Repository.DeleteObjectTaggingAsync(request: request);
+            var response = await this.Repository.DeleteObjectTaggingAsync(request: request,
+                cancellationToken: cancellationToken == default ? this.CancellationToken.Token : cancellationToken);
 
             this.Logger.LogTrace(JsonConvert.SerializeObject(value: response));
 
@@ -278,18 +305,21 @@ namespace AWSS3Helper
         }
 
         public async Task<T> GetObjectAsJsonAsync<T>(string bucket,
-            string key)
+            string key,
+            CancellationToken cancellationToken = default)
         {
             this.Logger.LogDebug($"[{nameof(this.GetObjectAsJsonAsync)}]");
 
             var data = await this.GetObjectContentsAsync(bucket: bucket,
-                key: key);
+                key: key,
+                cancellationToken: cancellationToken);
 
             return JsonConvert.DeserializeObject<T>(value: data);
         }
 
         public async Task<GetObjectResponse> GetObjectAsync(string bucket,
-            string key)
+            string key,
+            CancellationToken cancellationToken = default)
         {
             this.Logger.LogDebug($"[{nameof(this.GetObjectAsync)}]");
 
@@ -306,7 +336,8 @@ namespace AWSS3Helper
 
             this.Logger.LogTrace(JsonConvert.SerializeObject(value: request));
 
-            var response = await this.Repository.GetObjectAsync(request: request);
+            var response = await this.Repository.GetObjectAsync(request: request,
+                cancellationToken: cancellationToken == default ? this.CancellationToken.Token : cancellationToken);
 
             this.Logger.LogTrace(JsonConvert.SerializeObject(value: response));
 
@@ -314,12 +345,14 @@ namespace AWSS3Helper
         }
 
         public async Task<string> GetObjectContentsAsync(string bucket,
-            string key)
+            string key,
+            CancellationToken cancellationToken = default)
         {
             this.Logger.LogDebug($"[{nameof(this.GetObjectContentsAsync)}]");
 
             var data = await this.GetObjectAsync(bucket: bucket,
-                key: key);
+                key: key,
+                cancellationToken: cancellationToken);
 
             using (var stream = data.ResponseStream)
             using (var streamReader = new StreamReader(stream: stream))
@@ -329,7 +362,8 @@ namespace AWSS3Helper
         }
 
         public async Task<MetadataCollection> GetObjectMetadataAsync(string bucket,
-            string key)
+            string key,
+            CancellationToken cancellationToken = default)
         {
             this.Logger.LogDebug($"[{nameof(this.GetObjectMetadataAsync)}]");
 
@@ -346,7 +380,8 @@ namespace AWSS3Helper
 
             this.Logger.LogTrace(JsonConvert.SerializeObject(value: request));
 
-            var response = await this.Repository.GetObjectMetadataAsync(request: request);
+            var response = await this.Repository.GetObjectMetadataAsync(request: request,
+                cancellationToken: cancellationToken == default ? this.CancellationToken.Token : cancellationToken);
 
             this.Logger.LogTrace(JsonConvert.SerializeObject(value: response));
 
@@ -354,7 +389,8 @@ namespace AWSS3Helper
         }
 
         public async Task<IEnumerable<Tag>> GetObjectTagsAsync(string bucket,
-            string key)
+            string key,
+            CancellationToken cancellationToken = default)
         {
             this.Logger.LogDebug($"[{nameof(this.GetObjectTagsAsync)}]");
 
@@ -371,7 +407,8 @@ namespace AWSS3Helper
 
             this.Logger.LogTrace(JsonConvert.SerializeObject(value: request));
 
-            var response = await this.Repository.GetObjectTaggingAsync(request: request);
+            var response = await this.Repository.GetObjectTaggingAsync(request: request,
+                cancellationToken: cancellationToken == default ? this.CancellationToken.Token : cancellationToken);
 
             this.Logger.LogTrace(JsonConvert.SerializeObject(value: response));
 
@@ -411,7 +448,8 @@ namespace AWSS3Helper
         public async Task<bool> MoveObjectAsync(string sourceBucket,
             string sourceKey,
             string destinationBucket,
-            string destinationKey)
+            string destinationKey,
+            CancellationToken cancellationToken = default)
         {
             this.Logger.LogDebug($"[{nameof(this.MoveObjectAsync)}]");
 
@@ -420,18 +458,21 @@ namespace AWSS3Helper
             var copyResult = await this.CopyObjectAsync(sourceBucket: sourceBucket,
                 sourceKey: sourceKey,
                 destinationBucket: destinationBucket,
-                destinationKey: destinationKey);
+                destinationKey: destinationKey,
+                cancellationToken: cancellationToken);
 
             if (copyResult != null)
                 _ = await this.DeleteObjectAsync(bucket: sourceBucket,
-                    key: sourceKey);
+                    key: sourceKey,
+                    cancellationToken: cancellationToken);
 
             return true;
         }
 
         public async Task<CompleteMultipartUploadResponse> MultipartUploadCompleteAsync(string bucket,
             string key,
-            string uploadId)
+            string uploadId,
+            CancellationToken cancellationToken = default)
         {
             this.Logger.LogDebug($"[{nameof(this.MultipartUploadCompleteAsync)}]");
 
@@ -450,7 +491,8 @@ namespace AWSS3Helper
 
             this.Logger.LogTrace(JsonConvert.SerializeObject(value: request));
 
-            var response = await this.Repository.CompleteMultipartUploadAsync(request: request);
+            var response = await this.Repository.CompleteMultipartUploadAsync(request: request,
+                cancellationToken: cancellationToken == default ? this.CancellationToken.Token : cancellationToken);
 
             this.Logger.LogTrace(JsonConvert.SerializeObject(value: response));
 
@@ -459,7 +501,8 @@ namespace AWSS3Helper
 
         public async Task<string> MultipartUploadStartAsync(string bucket,
             string key,
-            S3CannedACL s3CannedAcl = null)
+            S3CannedACL s3CannedAcl = null,
+            CancellationToken cancellationToken = default)
         {
             this.Logger.LogDebug($"[{nameof(this.MultipartUploadStartAsync)}]");
 
@@ -479,7 +522,8 @@ namespace AWSS3Helper
 
             this.Logger.LogTrace(JsonConvert.SerializeObject(value: request));
 
-            var response = await this.Repository.InitiateMultipartUploadAsync(request: request);
+            var response = await this.Repository.InitiateMultipartUploadAsync(request: request,
+                cancellationToken: cancellationToken == default ? this.CancellationToken.Token : cancellationToken);
 
             this.Logger.LogTrace(JsonConvert.SerializeObject(value: response));
 
@@ -491,7 +535,8 @@ namespace AWSS3Helper
             string uploadId,
             int uploadPart,
             string contents,
-            Encoding encoding = null)
+            Encoding encoding = null,
+            CancellationToken cancellationToken = default)
         {
             this.Logger.LogDebug($"[{nameof(this.MultipartUploadUploadPartAsync)}]");
 
@@ -522,7 +567,8 @@ namespace AWSS3Helper
 
             this.Logger.LogTrace(JsonConvert.SerializeObject(value: request));
 
-            var response = await this.Repository.UploadPartAsync(request: request);
+            var response = await this.Repository.UploadPartAsync(request: request,
+                cancellationToken: cancellationToken == default ? this.CancellationToken.Token : cancellationToken);
 
             this.Logger.LogTrace(JsonConvert.SerializeObject(value: response));
 
@@ -533,7 +579,8 @@ namespace AWSS3Helper
             string key,
             string contents,
             S3CannedACL s3CannedAcl = null,
-            Encoding encoding = null)
+            Encoding encoding = null,
+            CancellationToken cancellationToken = default)
         {
             this.Logger.LogDebug($"[{nameof(this.PutObjectAsync)}]");
 
@@ -556,13 +603,15 @@ namespace AWSS3Helper
                 Key = key,
             };
 
-            return await this.PutObjectAsync(request: request);
+            return await this.PutObjectAsync(request: request,
+                cancellationToken: cancellationToken);
         }
 
         public async Task<PutObjectResponse> PutObjectAsync(string bucket,
             string key,
             Stream contents,
-            S3CannedACL s3CannedAcl = null)
+            S3CannedACL s3CannedAcl = null,
+            CancellationToken cancellationToken = default)
         {
             this.Logger.LogDebug($"[{nameof(this.PutObjectAsync)}]");
 
@@ -582,21 +631,25 @@ namespace AWSS3Helper
                 Key = key,
             };
 
-            return await this.PutObjectAsync(request: request);
+            return await this.PutObjectAsync(request: request,
+                cancellationToken: cancellationToken);
         }
 
         /// <summary>
         /// Put object
         /// </summary>
         /// <param name="request"></param>
+        /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        private async Task<PutObjectResponse> PutObjectAsync(Amazon.S3.Model.PutObjectRequest request)
+        private async Task<PutObjectResponse> PutObjectAsync(Amazon.S3.Model.PutObjectRequest request,
+            CancellationToken cancellationToken = default)
         {
             if (request == null) throw new ArgumentNullException(nameof(request));
 
             this.Logger.LogTrace(JsonConvert.SerializeObject(value: request));
 
-            var response = await this.Repository.PutObjectAsync(request: request);
+            var response = await this.Repository.PutObjectAsync(request: request,
+                cancellationToken: cancellationToken == default ? this.CancellationToken.Token : cancellationToken);
 
             this.Logger.LogTrace(JsonConvert.SerializeObject(value: response));
 
@@ -606,7 +659,8 @@ namespace AWSS3Helper
         public async Task<PutObjectTaggingResponse> SetObjectTagAsync(string bucket,
             string key,
             string tagName,
-            string tagValue)
+            string tagValue,
+            CancellationToken cancellationToken = default)
         {
             this.Logger.LogDebug($"[{nameof(this.SetObjectTagAsync)}]");
 
@@ -624,12 +678,14 @@ namespace AWSS3Helper
 
             return await this.SetObjectTagsAsync(bucket: bucket,
                 key: key,
-                tags: tags);
+                tags: tags,
+                cancellationToken: cancellationToken);
         }
 
         public async Task<PutObjectTaggingResponse> SetObjectTagsAsync(string bucket,
             string key,
-            IEnumerable<Tag> tags)
+            IEnumerable<Tag> tags,
+            CancellationToken cancellationToken = default)
         {
             this.Logger.LogDebug($"[{nameof(this.SetObjectTagAsync)}]");
 
@@ -648,7 +704,8 @@ namespace AWSS3Helper
 
             this.Logger.LogTrace(JsonConvert.SerializeObject(value: request));
 
-            var response = await this.Repository.PutObjectTaggingAsync(request: request);
+            var response = await this.Repository.PutObjectTaggingAsync(request: request,
+                cancellationToken: cancellationToken == default ? this.CancellationToken.Token : cancellationToken);
 
             this.Logger.LogTrace(JsonConvert.SerializeObject(value: response));
 

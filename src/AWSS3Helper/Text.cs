@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace AWSS3Helper
+﻿namespace AWSS3Helper
 {
     internal static class Text
     {
@@ -10,12 +8,7 @@ namespace AWSS3Helper
 
         internal static string InvalidPartSize { get; } = "Part size must be between 5 MB and 10 GB";
 
-        internal static string TempFilePath(string tempPath)
-        {
-            return string.IsNullOrWhiteSpace(tempPath)
-                ? throw new ArgumentNullException(nameof(tempPath))
-                : $"Temp path: {tempPath}";
-        }
+        internal static string TempFilePath(string tempPath) => $"Temp path: {tempPath}";
 
         internal static string FilePath { get; } = @"C:\temp\test.json";
 
