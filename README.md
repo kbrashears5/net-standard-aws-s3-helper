@@ -11,3 +11,36 @@
 [![nuget](https://img.shields.io/nuget/v/NetStandardAWSS3Helper.svg)](https://www.nuget.org/packages/NetStandardAWSS3Helper/)
 [![nuget](https://img.shields.io/nuget/dt/NetStandardAWSS3Helper)](https://img.shields.io/nuget/dt/NetStandardAWSS3Helper)
 </div>
+
+## Usage
+
+### Default - running in Lambda in your own account
+
+```c#
+var logger = new ConsoleLogger(logLevel: LogLevel.Information);
+
+var helper = new S3Helper(logger: logger);
+
+await helper.CreateBucketAsync(name: "bucket-name");
+```
+
+### Running in separate account or not in Lambda
+
+```c#
+var logger = new ConsoleLogger(logLevel: LogLevel.Information);
+
+var options = new AmazonS3Config()
+{
+    RegionEndpoint = RegionEndpoint.USEast1
+};
+
+var repository = new AmazonS3Client(config: options);
+
+var helper = new S3Helper(logger: logger);
+
+await helper.CreateBucketAsync(name: "bucket-name");
+```
+
+## Notes
+
+If no options are supplied, will default to `us-east-1` as the region
