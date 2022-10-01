@@ -19,7 +19,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AWSSDK.S3" Version="3.7.9.30" />
+    <PackageReference Include="AWSSDK.S3" Version="3.7.9.63" />
     <PackageReference Include="NetStandardLogger" Version="2.0.8" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
